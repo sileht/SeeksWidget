@@ -24,6 +24,7 @@ public class Search extends Activity {
 			String searchKeywords = intent.getStringExtra(SearchManager.QUERY);
 			startActivity(new Intent(Intent.ACTION_VIEW,
 						   Uri.parse(getUrlFromKeywords(searchKeywords))));
+			finish();
 		} else {
 			onSearchRequested();
 		}

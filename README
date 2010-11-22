@@ -1,4 +1,3 @@
-/*
  SeeksWidget is the legal property of mehdi abaakouk <theli48@gmail.com>
  Copyright (c) 2010 Mehdi Abaakouk
 
@@ -14,19 +13,9 @@
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
- */
-package fr.seeks;
 
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.view.Window;
 
-public class Settings extends PreferenceActivity {
+by ABAAKOUK Mehdi <thei48@gmail.com>
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
-	}
-}
+Artwork by bouteilledelait are 
+

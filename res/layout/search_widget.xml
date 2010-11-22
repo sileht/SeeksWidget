@@ -27,11 +27,25 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:paddingRight="14dip"
+        android:paddingLeft="10dip"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="@drawable/search_floater" >
 
 
+	<ImageView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/seeks_logo"
+	    android:layout_width="48dip"
+	    android:layout_height="48dip"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+	    android:scaleType="centerInside"
+	    android:focusable="false"
+	    android:clickable="false"
+	    android:src="@drawable/icon"
+	    />
+	    
         <TextView
             android:id="@+id/search_widget_text"
             android:layout_width="0dip"
@@ -57,9 +71,10 @@
         />
 	<ImageButton
 	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/logo_seeks"
+	    android:id="@+id/seeks_button"
 	    android:layout_width="48dip"
-	    android:layout_height="fill_parent"
+	    android:layout_height="48dip"
+        android:layout_marginTop="2dip"
 	    android:scaleType="centerInside"
 	    android:focusable="true"
 	    android:clickable="true"

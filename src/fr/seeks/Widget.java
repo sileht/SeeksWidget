@@ -1,11 +1,14 @@
-package fr.seeks.seeks;
+package fr.seeks;
 
+import fr.seeks.R;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.RemoteViews;
 
-public class SeeksWidget extends AppWidgetProvider {
+public class Widget extends AppWidgetProvider {
 	public void onDeleted(Context context, int[] appWidgetIds) {
 		// called when widgets are deleted
 		// see that you get an array of widgetIds which are deleted
@@ -70,9 +73,29 @@ public class SeeksWidget extends AppWidgetProvider {
 
 		// we will use only the first creation run
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-	}
-	
-	public void Configure(){
-		
+
+        final int N = appWidgetIds.length;
+
+        // Perform this loop procedure for each App Widget that belongs to this provider
+        for (int i=0; i<N; i++) {
+            int appWidgetId = appWidgetIds[i];
+
+            RemoteViews views = new RemoteViews(context.getPackageName(),
+				R.layout.search_widget);
+
+            Intent intent = new Intent(context, Search.class);
+			PendingIntent p = PendingIntent.getActivity(context, 0, intent, 0);
+			views.setOnClickPendingIntent(R.id.seeks_button, p);
+			views.setOnClickPendingIntent(R.id.search_widget_text, p);
+			appWidgetManager.updateAppWidget(appWidgetId, views);
+			
+
+            intent = new Intent(context, Settings.class);
+			p = PendingIntent.getActivity(context, 0, intent, 0);
+			views.setOnClickPendingIntent(R.id.seeks_logo, p);
+			appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
+
+
 	}
 }

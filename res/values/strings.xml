@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World!</string>
     <string name="app_name">Seeks</string>
+    <string name="search_label">Seeks</string>
+    <string name="search_hint">Seeks search</string>
+    <string name="widget_name">Seeks</string>
+    <string name="use_https">Use https</string>
+    <string name="use_https_desc">Not supported on all nodes</string>
+    <string name="pref_title">Seeks settings</string>
+    <string name="pref_about">About</string>
+    <string name="pref_about_desc">Seeks widget for Android by Mehdi ABAAKOUK &lt;theli48@gmail.com&gt;\nArtwork by bouteilledelait</string>
+<string name="pref_nodelist">Select a node</string>
+<string-array name="nodelist">
+<item>www.seeks-project.info</item>
+<item>www.seeks-project.info (exp)</item>
+<item>www.seeks.fr</item>
+<item>seeks.sileht.net</item>
+<item>search.riquer.fr</item>
+<item>ouahpiti.infos</item>
+<item>seeks.trankil.info</item>
+<item>seeks.homecomputing.fr</item>
+<item>search.c9h.de</item>
+<item>seeks.jeydee.net</item>
+</string-array>
+<string-array name="nodelist_values">
+<item>http://www.seeks-project.info/search.php</item>
+<item>http://www.seeks-project.info/search_exp.php</item>
+<item>http://www.seeks.fr</item>
+<item>http://seeks.sileht.net/index.php</item>
+<item>http://search.riquer.fr/index.php</item>
+<item>http://ouahpiti.infos/index.php</item>
+<item>http://seeks.trankil.info</item>
+<item>http://seeks.homecomputing.fr</item>
+<item>http://search.c9h.de</item>
+</string-array>
 </resources>

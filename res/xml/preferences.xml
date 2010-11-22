@@ -1,0 +1,7 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceCategory android:title="@string/pref_title">
+
+<ListPreference android:key="nodelist" android:entries="@array/nodelist" android:entryValues="@array/nodelist_values" android:title="@string/pref_nodelist"></ListPreference>
+<CheckBoxPreference android:key="use_https" android:title="@string/use_https" android:summary="@string/use_https_desc"></CheckBoxPreference><Preference android:summary="@string/pref_about_desc" android:title="@string/pref_about"></Preference>
+</PreferenceCategory>
+</PreferenceScreen>        

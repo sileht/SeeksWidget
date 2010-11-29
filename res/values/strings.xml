@@ -30,14 +30,15 @@
 <item>seeks.jeydee.net</item>
 </string-array>
 <string-array name="nodelist_values">
-<item>http://www.seeks-project.info/search.php</item>
-<item>http://www.seeks-project.info/search_exp.php</item>
-<item>http://www.seeks.fr</item>
-<item>http://seeks.sileht.net/index.php</item>
-<item>http://search.riquer.fr/index.php</item>
-<item>http://ouahpiti.infos/index.php</item>
-<item>http://seeks.trankil.info</item>
-<item>http://seeks.homecomputing.fr</item>
-<item>http://search.c9h.de</item>
+<item>www.seeks-project.info/search.php</item>
+<item>www.seeks-project.info/search_exp.php</item>
+<item>www.seeks.fr</item>
+<item>seeks.sileht.net/index.php</item>
+<item>search.riquer.fr/index.php</item>
+<item>ouahpiti.infos/index.php</item>
+<item>seeks.trankil.info</item>
+<item>seeks.homecomputing.fr</item>
+<item>search.c9h.de</item>
+<item>seeks.jeydee.net/seeks.php/search</item>
 </string-array>
 </resources>

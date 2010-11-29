@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
  <searchable xmlns:android="http://schemas.android.com/apk/res/android"
      android:label="@string/search_label"
-     android:includeInGlobalSearch="true"
-     android:hint="@string/search_hint" 
-     android:configure="fr.seeks.Settings">
+     android:hint="@string/search_hint"
+     android:configure="fr.seeks.Settings"
+     android:voiceSearchMode="showVoiceSearchButton"
+     android:voiceLanguageModel="web_search"
+     android:voiceMaxResults="1"
+>
  </searchable>

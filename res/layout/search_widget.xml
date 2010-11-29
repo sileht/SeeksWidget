@@ -73,12 +73,12 @@
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/seeks_button"
 	    android:layout_width="48dip"
-	    android:layout_height="48dip"
-        android:layout_marginTop="2dip"
+	    android:layout_height="fill_parent"
 	    android:scaleType="centerInside"
 	    android:focusable="true"
 	    android:clickable="true"
-	    android:src="@drawable/search_app_icon"
+	    android:background="@drawable/btn_search_dialog_voice"
+	    android:src="@drawable/magnifying_glass"
 	    />
     </LinearLayout>
 

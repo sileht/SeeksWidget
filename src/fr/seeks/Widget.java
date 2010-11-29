@@ -105,7 +105,6 @@ public class Widget extends AppWidgetProvider {
 			views.setOnClickPendingIntent(R.id.seeks_button, p);
 			views.setOnClickPendingIntent(R.id.search_widget_text, p);
 			appWidgetManager.updateAppWidget(appWidgetId, views);
-			
 
             intent = new Intent(context, Settings.class);
 			p = PendingIntent.getActivity(context, 0, intent, 0);

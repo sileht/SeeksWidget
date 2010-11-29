@@ -22,18 +22,17 @@ import java.net.URLEncoder;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Window;
 
 public class Search extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 				
 		Intent intent = getIntent();
 		String queryAction = intent.getAction();
@@ -45,13 +44,21 @@ public class Search extends Activity {
 			finish();
 		} else {
 			onSearchRequested();
+			SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			sm.setOnDismissListener (new SearchManager.OnDismissListener() {
+				@Override
+				public void onDismiss() {
+					finish();					
+				}
+			});
 		}
 	}
 	
 	public String getUrlFromKeywords(String keywords){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		String nodeurl = prefs.getString("nodelist", "http://seeks.fr");
-		String url = nodeurl+"/search?q="+URLEncoder.encode(keywords)+"&expansion=1&action=expand";
+		String nodeurl = prefs.getString("nodelist", "seeks.fr");
+		String proto = ( prefs.getBoolean("use_https",false) ? "https" : "http" );
+		String url = proto+"://"+nodeurl+"/search?q="+URLEncoder.encode(keywords)+"&expansion=1&action=expand";
 		return url;
 
 	}

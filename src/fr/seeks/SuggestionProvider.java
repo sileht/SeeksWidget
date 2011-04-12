@@ -20,13 +20,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,11 +38,13 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 /**
@@ -56,11 +59,13 @@ public class SuggestionProvider extends ContentProvider {
 
 	public static final String KEY_TITLE = SearchManager.SUGGEST_COLUMN_TEXT_1;
 	public static final String KEY_DESCRIPTION = SearchManager.SUGGEST_COLUMN_TEXT_2;
-	public static final String KEY_URL = "URL";
+	public static final String KEY_QUERY = SearchManager.SUGGEST_COLUMN_QUERY;
+	public static final String KEY_ACTION = SearchManager.SUGGEST_COLUMN_INTENT_ACTION;
+	public static final String KEY_URL = SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA;
 
 	public static final String TITLE_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
 			+ "/vnd.seeks.android.query";
-	public static final String DESCRIPTION_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+	public static final String DESCRIPTION_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 			+ "/vnd.seeks.android.query";
 
 	@Override
@@ -68,66 +73,129 @@ public class SuggestionProvider extends ContentProvider {
 		return true;
 	}
 
-	/**
-	 * Handles all the dictionary searches and suggestion queries from the
-	 * Search Manager. When requesting a specific word, the uri alone is
-	 * required. When searching all of the dictionary for matches, the
-	 * selectionArgs argument must carry the search query as the first element.
-	 * All other arguments are ignored.
-	 */
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
+		try {
+			return getCursorFromQuery(selectionArgs[0]);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-		String url = getUrlFromKeywords(selectionArgs[0]);
+	public Cursor getCursorFromQuery(String query)
+			throws MalformedURLException, IOException {
+		String url = getUrlFromKeywords(query);
 		Log.v(TAG, "Query:" + url);
 
 		String json = null;
 
-		try {
-			URL u = new URL(url);
-			HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-			connection.connect();
-			InputStream in = connection.getInputStream();
+		while (json == null) {
+			HttpURLConnection connection = null;
+			connection = (HttpURLConnection) (new URL(url)).openConnection();
 
-			byte[] bArr = null;
-			in.read(bArr);
-			json =  new String(bArr);
-			Log.v(TAG,"JSON:");
-			Log.v(TAG,json);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			try {
+				connection.setDoOutput(true);
+				connection.setChunkedStreamingMode(0);
+				connection.setInstanceFollowRedirects(true);
+
+				connection.connect();
+				int response = connection.getResponseCode();
+				if (response == HttpURLConnection.HTTP_MOVED_PERM
+						|| response == HttpURLConnection.HTTP_MOVED_TEMP) {
+					Map<String, List<String>> list = connection
+							.getHeaderFields();
+					for (Entry<String, List<String>> entry : list.entrySet()) {
+						String value = "";
+						for (String s : entry.getValue()) {
+							value = value + ";" + s;
+						}
+						Log.v(TAG, entry.getKey() + ":" + value);
+					}
+					// FIXME
+					url = "";
+					return null;
+				}
+				InputStream in = connection.getInputStream();
+
+				BufferedReader r = new BufferedReader(new InputStreamReader(in));
+				StringBuilder builder = new StringBuilder();
+
+				String line;
+				while ((line = r.readLine()) != null) {
+					builder.append(line);
+				}
+
+				json = builder.toString();
+
+				/*
+				 * Log.v(TAG, "** JSON START **"); Log.v(TAG, json); Log.v(TAG,
+				 * "** JSON END **");
+				 */
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			} finally {
+				connection.disconnect();
+			}
 		}
 
-		MatrixCursor m = new MatrixCursor(new String[] { KEY_TITLE,
-				KEY_DESCRIPTION, KEY_URL });
+		MatrixCursor m = new MatrixCursor(new String[] { BaseColumns._ID,
+				KEY_TITLE, KEY_DESCRIPTION, KEY_QUERY, KEY_ACTION, KEY_URL });
 
 		JSONArray snippets;
 		JSONObject object;
+		JSONArray suggestions;
 
-		try {
-			object = (JSONObject) new JSONTokener(json).nextValue();
-			snippets = object.getJSONArray("snippets");
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		}
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getContext());
 
-		for (int i = 0; i < snippets.length(); i++) {
-			JSONObject snip;
+		Boolean show_snippets = prefs.getBoolean("show_snippets", false);
+		if (show_snippets) {
 			try {
-				snip = snippets.getJSONObject(i);
-				m.newRow().add(snip.getString("title")).add(
-						snip.getString("summary")).add(snip.getString("url"));
+				object = (JSONObject) new JSONTokener(json).nextValue();
+				snippets = object.getJSONArray("snippets");
 			} catch (JSONException e) {
 				e.printStackTrace();
-				continue;
+				return null;
+			}
+			Log.v(TAG, "Snippets found: " + snippets.length());
+			for (int i = 0; i < snippets.length(); i++) {
+				JSONObject snip;
+				try {
+					snip = snippets.getJSONObject(i);
+					m.newRow().add(i).add(snip.getString("title"))
+							.add(snip.getString("summary")).add(snip.getString("title")).add(Intent.ACTION_SEND)
+							.add(snip.getString("url"));
+				} catch (JSONException e) {
+					e.printStackTrace();
+					continue;
+				}
+			}
+		} else {
+			try {
+				object = (JSONObject) new JSONTokener(json).nextValue();
+				suggestions = object.getJSONArray("suggestions");
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+			Log.v(TAG, "Suggestions found: " + suggestions.length());
+			for (int i = 0; i < suggestions.length(); i++) {
+				try {
+					m.newRow().add(i).add(suggestions.getString(i)).add("")
+							.add(suggestions.getString(i)).add(Intent.ACTION_SEARCH).add("");
+				} catch (JSONException e) {
+					e.printStackTrace();
+					continue;
+				}
 			}
 		}
+
+		m.requery();
 
 		return m;
 

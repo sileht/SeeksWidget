@@ -15,7 +15,7 @@
     <string name="pref_about2">About Seeks Service</string>
     <string name="pref_about2_desc">Service is under AGPL\nMore information at http://seeks-project.info/</string>
 <string name="pref_nodelist">Select a node</string>
-
+<string name="settings_description">Search on you favorite seeks node</string>
 
 <string-array name="nodelist">
 <item>www.seeks-project.info</item>

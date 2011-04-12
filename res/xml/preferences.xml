@@ -7,6 +7,8 @@
 			android:title="@string/use_https" android:summary="@string/use_https_desc"></CheckBoxPreference>
 		<CheckBoxPreference android:key="show_snippets"
 			android:title="@string/show_snippets" android:summary="@string/show_snippets_desc"></CheckBoxPreference>
+		<CheckBoxPreference android:key="instant_suggest"
+			android:title="@string/instant_suggest" android:summary="@string/instant_suggest_desc"></CheckBoxPreference>
 		<Preference android:title="@string/pref_author"
 			android:summary="@string/pref_author_desc"></Preference>
 		<Preference android:summary="@string/pref_about_desc"

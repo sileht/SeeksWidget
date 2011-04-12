@@ -28,6 +28,8 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +38,6 @@ import org.json.JSONTokener;
 
 import android.app.SearchManager;
 import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -63,30 +64,83 @@ public class SuggestionProvider extends ContentProvider {
 	public static final String KEY_ACTION = SearchManager.SUGGEST_COLUMN_INTENT_ACTION;
 	public static final String KEY_URL = SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA;
 
-	public static final String TITLE_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-			+ "/vnd.seeks.android.query";
-	public static final String DESCRIPTION_MIME_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-			+ "/vnd.seeks.android.query";
+	private Timer mTimer = null;
+	private SharedPreferences mPrefs;
 
 	@Override
 	public boolean onCreate() {
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 		return true;
 	}
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
+		String query = selectionArgs[0];
+		
+		Log.v(TAG, "Request '"+query+"' for '"+uri+"'");
+
+		MatrixCursor matrix = new MatrixCursor(new String[] { BaseColumns._ID,
+				KEY_TITLE, KEY_DESCRIPTION, KEY_QUERY, KEY_ACTION, KEY_URL });
+		
+
+		if (query  != ""){
+			Boolean instant_suggest = mPrefs.getBoolean("instant_suggest", false);
+			if (instant_suggest){
+				setCursorOfQuery(uri, query, matrix);
+			} else {
+				perhapsSetCursorOfQuery(uri, query, matrix);
+			}
+		}
+
+		matrix.setNotificationUri(getContext().getContentResolver(), uri);
+		return matrix;
+	}
+
+	public void perhapsSetCursorOfQuery(Uri uri, String query,
+			MatrixCursor matrix) {
+
+		if (query == "")
+			return;
+
+		if (mTimer != null) {
+			mTimer.cancel();
+		}
+		mTimer = new Timer(true);
+		mTimer.schedule(new SuggestionTimerTask(uri, query, matrix), 500);
+	}
+
+	private class SuggestionTimerTask extends TimerTask {
+		private String mQuery;
+		private MatrixCursor mMatrix;
+		private Uri mUri;
+
+		public SuggestionTimerTask(Uri uri, String query, MatrixCursor matrix) {
+			super();
+			mUri = uri;
+			mQuery = query;
+			mMatrix = matrix;
+
+		}
+
+		@Override
+		public void run() {
+			setCursorOfQuery(mUri, mQuery, mMatrix);
+		}
+
+	}
+
+	public void setCursorOfQuery(Uri uri, String query, MatrixCursor matrix) {
 		try {
-			return getCursorFromQuery(selectionArgs[0]);
+			setCursorOfQueryThrow(uri, query, matrix);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
 	}
 
-	public Cursor getCursorFromQuery(String query)
+	public void setCursorOfQueryThrow(Uri uri, String query, MatrixCursor matrix)
 			throws MalformedURLException, IOException {
 		String url = getUrlFromKeywords(query);
 		Log.v(TAG, "Query:" + url);
@@ -117,7 +171,7 @@ public class SuggestionProvider extends ContentProvider {
 					}
 					// FIXME
 					url = "";
-					return null;
+					return;
 				}
 				InputStream in = connection.getInputStream();
 
@@ -137,39 +191,34 @@ public class SuggestionProvider extends ContentProvider {
 				 */
 			} catch (IOException e) {
 				e.printStackTrace();
-				return null;
+				return;
 			} finally {
 				connection.disconnect();
 			}
 		}
 
-		MatrixCursor m = new MatrixCursor(new String[] { BaseColumns._ID,
-				KEY_TITLE, KEY_DESCRIPTION, KEY_QUERY, KEY_ACTION, KEY_URL });
-
 		JSONArray snippets;
 		JSONObject object;
 		JSONArray suggestions;
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getContext());
-
-		Boolean show_snippets = prefs.getBoolean("show_snippets", false);
+		Boolean show_snippets = mPrefs.getBoolean("show_snippets", false);
 		if (show_snippets) {
 			try {
 				object = (JSONObject) new JSONTokener(json).nextValue();
 				snippets = object.getJSONArray("snippets");
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return null;
+				return;
 			}
 			Log.v(TAG, "Snippets found: " + snippets.length());
 			for (int i = 0; i < snippets.length(); i++) {
 				JSONObject snip;
 				try {
 					snip = snippets.getJSONObject(i);
-					m.newRow().add(i).add(snip.getString("title"))
-							.add(snip.getString("summary")).add(snip.getString("title")).add(Intent.ACTION_SEND)
-							.add(snip.getString("url"));
+					matrix.newRow().add(i).add(snip.getString("title"))
+							.add(snip.getString("summary"))
+							.add(snip.getString("title"))
+							.add(Intent.ACTION_SEND).add(snip.getString("url"));
 				} catch (JSONException e) {
 					e.printStackTrace();
 					continue;
@@ -181,56 +230,48 @@ public class SuggestionProvider extends ContentProvider {
 				suggestions = object.getJSONArray("suggestions");
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return null;
+				return;
 			}
 			Log.v(TAG, "Suggestions found: " + suggestions.length());
 			for (int i = 0; i < suggestions.length(); i++) {
 				try {
-					m.newRow().add(i).add(suggestions.getString(i)).add("")
-							.add(suggestions.getString(i)).add(Intent.ACTION_SEARCH).add("");
+					matrix.newRow().add(i).add(suggestions.getString(i))
+							.add("").add(suggestions.getString(i))
+							.add(Intent.ACTION_SEARCH).add("");
 				} catch (JSONException e) {
 					e.printStackTrace();
 					continue;
 				}
 			}
 		}
-
-		m.requery();
-
-		return m;
+		getContext().getContentResolver().notifyChange(uri, null);
 
 	}
 
 	public String getUrlFromKeywords(String keywords) {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getContext());
-		String nodeurl = prefs.getString("nodelist", "seeks.fr");
-		String proto = (prefs.getBoolean("use_https", false) ? "https" : "http");
+		String nodeurl = mPrefs.getString("nodelist", "seeks.fr");
+		String proto = (mPrefs.getBoolean("use_https", false) ? "https" : "http");
 		String url = proto + "://" + nodeurl + "/search?output=json&q="
 				+ URLEncoder.encode(keywords) + "&expansion=1&action=expand";
 		return url;
 	}
 
-	/**
-	 * This method is required in order to query the supported types. It's also
-	 * useful in our own query() method to determine the type of Uri received.
-	 */
-
-	// Other required implementations...
-
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
+		Log.v(TAG, "insert '" + values + "' for '" + uri + "'");
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		Log.v(TAG, "delete '" + selection + "' for '" + uri + "'");
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
+		Log.v(TAG, "update '" + values + "' for '" + uri + "'");
 		throw new UnsupportedOperationException();
 	}
 

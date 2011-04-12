@@ -9,7 +9,7 @@
     <string name="pref_title">Seeks settings</string>
     
     <string name="pref_author">Author</string>
-    <string name="pref_author_desc">Widget by Mehdi ABAAKOUK &lt;theli48@gmail.com&gt;\nArtwork by bouteilledelait</string>
+    <string name="pref_author_desc">Widget by Mehdi ABAAKOUK &lt;sileht@sileht.net&gt;\nArtwork by bouteilledelait</string>
     <string name="pref_about">About</string>
     <string name="pref_about_desc">Application are under GPL and available at http://github.com/sileht/SeeksWidget</string>
     <string name="pref_about2">About Seeks Service</string>
@@ -18,6 +18,8 @@
 <string name="settings_description">Search on you favorite seeks node</string>
 <string name="show_snippets">Show snippet</string>
 <string name="show_snippets_desc">Show snippet instead of seeks suggestions</string>
+<string name="instant_suggest">Instant suggest</string>
+<string name="instant_suggest_desc">Don\'t wait to suggest \'related querys\' or \'snippets\'</string>
 
 <string-array name="nodelist">
 <item>www.seeks-project.info</item>

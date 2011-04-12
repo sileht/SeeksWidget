@@ -92,7 +92,7 @@ public class SuggestionProvider extends ContentProvider {
 				perhapsSetCursorOfQuery(uri, query, matrix);
 			}
 		}
-
+		
 		matrix.setNotificationUri(getContext().getContentResolver(), uri);
 		return matrix;
 	}
@@ -200,7 +200,9 @@ public class SuggestionProvider extends ContentProvider {
 		JSONArray snippets;
 		JSONObject object;
 		JSONArray suggestions;
-
+		
+		matrix.moveToFirst();
+		
 		Boolean show_snippets = mPrefs.getBoolean("show_snippets", false);
 		if (show_snippets) {
 			try {

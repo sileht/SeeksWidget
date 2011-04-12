@@ -8,7 +8,7 @@
 		<CheckBoxPreference android:key="show_snippets"
 			android:title="@string/show_snippets" android:summary="@string/show_snippets_desc"></CheckBoxPreference>
 		<CheckBoxPreference android:key="instant_suggest"
-			android:title="@string/instant_suggest" android:summary="@string/instant_suggest_desc"></CheckBoxPreference>
+			android:title="@string/instant_suggest" android:summary="@string/instant_suggest_desc" android:enabled="true"></CheckBoxPreference>
 		<Preference android:title="@string/pref_author"
 			android:summary="@string/pref_author_desc"></Preference>
 		<Preference android:summary="@string/pref_about_desc"

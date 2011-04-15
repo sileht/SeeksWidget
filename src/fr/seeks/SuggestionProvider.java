@@ -76,24 +76,26 @@ public class SuggestionProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		String query = selectionArgs[0];
-		
-		Log.v(TAG, "Request '"+query+"' for '"+uri+"'");
+
+		String query = uri.getLastPathSegment();
+
+		if (query == null || query.equals("")
+				|| query.equals("search_suggest_query"))
+			return null;
+
+		Log.v(TAG, "Request '" + query + "' for '" + uri + "'");
 
 		MatrixCursor matrix = new MatrixCursor(new String[] { BaseColumns._ID,
 				KEY_TITLE, KEY_DESCRIPTION, KEY_QUERY, KEY_ACTION, KEY_URL });
-		
 
-		if (query  != ""){
-			Boolean instant_suggest = mPrefs.getBoolean("instant_suggest", false);
-			if (instant_suggest){
-				setCursorOfQuery(uri, query, matrix);
-			} else {
-				perhapsSetCursorOfQuery(uri, query, matrix);
-			}
+		Boolean instant_suggest = mPrefs.getBoolean("instant_suggest", false);
+		if (instant_suggest) {
+			setCursorOfQuery(uri, query, matrix);
+		} else {
+			perhapsSetCursorOfQuery(uri, query, matrix);
 		}
-		
 		matrix.setNotificationUri(getContext().getContentResolver(), uri);
+
 		return matrix;
 	}
 
@@ -200,9 +202,7 @@ public class SuggestionProvider extends ContentProvider {
 		JSONArray snippets;
 		JSONObject object;
 		JSONArray suggestions;
-		
-		matrix.moveToFirst();
-		
+
 		Boolean show_snippets = mPrefs.getBoolean("show_snippets", false);
 		if (show_snippets) {
 			try {
@@ -217,10 +217,10 @@ public class SuggestionProvider extends ContentProvider {
 				JSONObject snip;
 				try {
 					snip = snippets.getJSONObject(i);
-					matrix.newRow().add(i).add(snip.getString("title"))
-							.add(snip.getString("summary"))
-							.add(snip.getString("title"))
-							.add(Intent.ACTION_SEND).add(snip.getString("url"));
+					matrix.newRow().add(i).add(snip.getString("title")).add(
+							snip.getString("summary")).add(
+							snip.getString("title")).add(Intent.ACTION_SEND)
+							.add(snip.getString("url"));
 				} catch (JSONException e) {
 					e.printStackTrace();
 					continue;
@@ -238,8 +238,8 @@ public class SuggestionProvider extends ContentProvider {
 			for (int i = 0; i < suggestions.length(); i++) {
 				try {
 					matrix.newRow().add(i).add(suggestions.getString(i))
-							.add("").add(suggestions.getString(i))
-							.add(Intent.ACTION_SEARCH).add("");
+							.add("").add(suggestions.getString(i)).add(
+									Intent.ACTION_SEARCH).add("");
 				} catch (JSONException e) {
 					e.printStackTrace();
 					continue;
@@ -252,7 +252,8 @@ public class SuggestionProvider extends ContentProvider {
 
 	public String getUrlFromKeywords(String keywords) {
 		String nodeurl = mPrefs.getString("nodelist", "seeks.fr");
-		String proto = (mPrefs.getBoolean("use_https", false) ? "https" : "http");
+		String proto = (mPrefs.getBoolean("use_https", false) ? "https"
+				: "http");
 		String url = proto + "://" + nodeurl + "/search?output=json&q="
 				+ URLEncoder.encode(keywords) + "&expansion=1&action=expand";
 		return url;

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- /* SeeksWidget is the legal property of mehdi abaakouk <theli48@gmail.com> 
-	Copyright (c) 2010 Mehdi Abaakouk This program is free software; you can 
-	redistribute it and/or modify it under the terms of the GNU General Public 
-	License as published by the Free Software Foundation; either version 3 of 
-	the License This program is distributed in the hope that it will be useful, 
-	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for 
-	more details. You should have received a copy of the GNU General Public License 
-	along with this program; if not, write to the Free Software Foundation, Inc., 
-	51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA */ -->
+	<!--
+		SeeksWidget is the legal property of mehdi abaakouk
+		<theli48@gmail.com> Copyright (c) 2010 Mehdi Abaakouk This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 3 of the License This program is
+		distributed in the hope that it will be useful, but WITHOUT ANY
+		WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. You should have received a copy of the GNU General
+		Public License along with this program; if not, write to the Free
+		Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+		02110-1301, USA
+	-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="fr.seeks" android:versionCode="1" android:versionName="1.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
@@ -24,8 +28,10 @@
 		<activity android:name=".Settings" android:label="Seeks Settings"
 			android:theme="@android:style/Theme.NoTitleBar">
 
-			<!-- intent-filter> <action android:name="android.intent.action.MAIN" 
-				/> <category android:name="android.intent.category.LAUNCHER" /> </intent-filter -->
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
 
 		</activity>
 
@@ -43,8 +49,6 @@
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 			</intent-filter>
-
-
 
 
 			<meta-data android:name="android.app.searchable"

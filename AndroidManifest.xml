@@ -25,8 +25,12 @@
 				android:resource="@xml/seeks_widget_info" />
 		</receiver>
 
-		<activity android:name=".Settings" android:label="Seeks Settings"
-			android:theme="@android:style/Theme.NoTitleBar">
+		<activity android:name=".Settings" android:label="Seeks"
+			android:theme="@android:style/Theme.NoTitleBar"
+			android:finishOnTaskLaunch="true"
+			android:launchMode="singleInstance"
+			android:clearTaskOnLaunch="true"
+			>
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -35,13 +39,12 @@
 
 		</activity>
 
-		<activity android:name=".Search" android:label="Seeks"
-			android:theme="@android:style/Theme.NoTitleBar">
-
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+		<activity android:name=".Search" android:label="Seeks Search"
+			android:theme="@android:style/Theme.NoTitleBar"
+			android:finishOnTaskLaunch="true"
+			android:launchMode="singleInstance"
+			android:clearTaskOnLaunch="true"
+			>
 
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

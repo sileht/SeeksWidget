@@ -17,8 +17,10 @@
  */
 package fr.seeks;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.view.Window;
 
 public class Settings extends PreferenceActivity {
@@ -28,5 +30,12 @@ public class Settings extends PreferenceActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
+
+		Intent intent = getIntent();
+		if (!"android.intent.action.MAIN".equals(intent.getAction())) {
+			((PreferenceCategory) findPreference("cat_title"))
+					.removePreference(findPreference("start_search"));
+		}
+
 	}
 }

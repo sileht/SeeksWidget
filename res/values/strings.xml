@@ -20,6 +20,8 @@
 <string name="show_snippets_desc">Show snippet instead of seeks suggestions</string>
 <string name="instant_suggest">Instant suggest</string>
 <string name="instant_suggest_desc">Don\'t wait to suggest \'related querys\' or \'snippets\'</string>
+<string name="pref_search">Start a search</string>
+<string name="pref_search_desc">Start a search with seeks</string>
 
 <string-array name="nodelist">
 <item>www.seeks-project.info</item>

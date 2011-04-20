@@ -1,6 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory android:title="@string/pref_title">
+	<PreferenceCategory android:title="@string/pref_title" android:key="cat_title">
 
+		<PreferenceScreen android:title="@string/pref_search" android:summary="@string/pref_search_desc" android:key="start_search">
+			<intent android:action="android.intent.action.VIEW"  android:targetPackage="fr.seeks" android:targetClass="fr.seeks.Search" />
+		</PreferenceScreen>
 		<ListPreference android:key="nodelist" android:entries="@array/nodelist"
 			android:entryValues="@array/nodelist_values" android:title="@string/pref_nodelist"></ListPreference>
 		<CheckBoxPreference android:key="use_https"
@@ -8,12 +11,13 @@
 		<CheckBoxPreference android:key="show_snippets"
 			android:title="@string/show_snippets" android:summary="@string/show_snippets_desc"></CheckBoxPreference>
 		<CheckBoxPreference android:key="instant_suggest"
-			android:title="@string/instant_suggest" android:summary="@string/instant_suggest_desc" android:enabled="true"></CheckBoxPreference>
+			android:title="@string/instant_suggest" android:summary="@string/instant_suggest_desc" android:defaultValue="true"></CheckBoxPreference>
 		<Preference android:title="@string/pref_author"
 			android:summary="@string/pref_author_desc"></Preference>
 		<Preference android:summary="@string/pref_about_desc"
 			android:title="@string/pref_about"></Preference>
 
 
-	</PreferenceCategory>
+	
+</PreferenceCategory>
 </PreferenceScreen>        

@@ -75,12 +75,17 @@ public class Search extends Activity {
 	}
 
 	public String getUrlFromKeywords(String keywords) {
-		String nodeurl = mPrefs.getString("nodelist", "seeks.fr");
-		String proto = (mPrefs.getBoolean("use_https", false) ? "https"
+		String seeksPath = "";
+		if ("Custom URL".equals(mPrefs.getString("nodelist", ""))){
+			seeksPath = mPrefs.getString("custom_url", "");
+		} else {
+			String nodeurl = mPrefs.getString("nodelist", "seeks.fr");
+			String proto = (mPrefs.getBoolean("use_https", false) ? "https"
 				: "http");
-		String url = proto + "://" + nodeurl + "/search?q="
+			seeksPath = proto + "://" + nodeurl ;
+		}
+		String url = seeksPath + "/search?q="
 				+ URLEncoder.encode(keywords) + "&expansion=1&action=expand";
 		return url;
-
 	}
 }

@@ -8,12 +8,9 @@
     <string name="use_https_desc">Not supported on all nodes</string>
     <string name="pref_title">Seeks settings</string>
     
-    <string name="pref_author">Author</string>
-    <string name="pref_author_desc">Widget by Mehdi ABAAKOUK &lt;sileht@sileht.net&gt;\nArtwork by bouteilledelait</string>
     <string name="pref_about">About</string>
-    <string name="pref_about_desc">Application are under GPL and available at http://github.com/sileht/SeeksWidget</string>
-    <string name="pref_about2">About Seeks Service</string>
-    <string name="pref_about2_desc">Service is under AGPL\nMore information at http://seeks-project.info/</string>
+    <string name="pref_about_desc">Author: Mehdi ABAAKOUK &lt;sileht@sileht.net&gt;\nArtwork: bouteilledelait\n\nLicense: Application are under GPL, Service is under AGPL\n\nMore information:\n- http://seeks-project.info/\n- http://github.com/sileht/SeeksWidget</string>
+    
 <string name="pref_nodelist">Select a node</string>
 <string name="settings_description">Search on you favorite seeks node</string>
 <string name="show_snippets">Show snippet</string>
@@ -22,6 +19,7 @@
 <string name="instant_suggest_desc">Don\'t wait to suggest \'related querys\' or \'snippets\'</string>
 <string name="pref_search">Start a search</string>
 <string name="pref_search_desc">Start a search with seeks</string>
+<string name="pref_custom_url">Custom URL</string>
 
 <string-array name="nodelist">
 <item>www.seeks-project.info</item>
@@ -34,6 +32,7 @@
 <item>seeks.homecomputing.fr</item>
 <item>search.c9h.de</item>
 <item>seeks.jeydee.net</item>
+<item>Custom URL</item>
 </string-array>
 <string-array name="nodelist_values">
 <item>www.seeks-project.info/search.php</item>
@@ -46,5 +45,6 @@
 <item>seeks.homecomputing.fr</item>
 <item>search.c9h.de</item>
 <item>seeks.jeydee.net/seeks.php/search</item>
+<item>Custom URL</item>
 </string-array>
 </resources>

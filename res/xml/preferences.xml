@@ -4,20 +4,18 @@
 		<PreferenceScreen android:title="@string/pref_search" android:summary="@string/pref_search_desc" android:key="start_search">
 			<intent android:action="android.intent.action.VIEW"  android:targetPackage="fr.seeks" android:targetClass="fr.seeks.Search" />
 		</PreferenceScreen>
-		<ListPreference android:key="nodelist" android:entries="@array/nodelist"
-			android:entryValues="@array/nodelist_values" android:title="@string/pref_nodelist"></ListPreference>
-		<CheckBoxPreference android:key="use_https"
-			android:title="@string/use_https" android:summary="@string/use_https_desc"></CheckBoxPreference>
 		<CheckBoxPreference android:key="show_snippets"
 			android:title="@string/show_snippets" android:summary="@string/show_snippets_desc"></CheckBoxPreference>
 		<CheckBoxPreference android:key="instant_suggest"
 			android:title="@string/instant_suggest" android:summary="@string/instant_suggest_desc" android:defaultValue="true"></CheckBoxPreference>
-		<Preference android:title="@string/pref_author"
-			android:summary="@string/pref_author_desc"></Preference>
-		<Preference android:summary="@string/pref_about_desc"
-			android:title="@string/pref_about"></Preference>
+			
+		<ListPreference android:key="nodelist" android:entries="@array/nodelist"
+			android:entryValues="@array/nodelist_values" android:title="@string/pref_nodelist"></ListPreference>
+		<EditTextPreference android:key="custom_url" android:title="@string/pref_custom_url" android:defaultValue="http://my.domain/seeks/search.php"></EditTextPreference>
+		<CheckBoxPreference android:key="use_https"
+			android:title="@string/use_https" android:summary="@string/use_https_desc"></CheckBoxPreference>
+			
+		<Preference android:key="about" android:title="@string/pref_about"></Preference>
 
-
-	
 </PreferenceCategory>
 </PreferenceScreen>        
